@@ -2,7 +2,7 @@ import React, {useState} from "react";
 
 function App() {
     const [count, setCount] = useState(0)
-
+    const [value, setValue] = useState('Текстт')
     const increment = () => {
         setCount(count + 1)
     }
@@ -17,6 +17,9 @@ function App() {
                 <button onClick={increment}>Increment</button>
                 <button onClick={decrement}>Decrement</button>
             </div>
+            <h1>{value}</h1>
+            {/*{Двустороннее связывание, управляемый компонент}*/}
+            <input onChange={event => setValue(event.target.value)} type="text" value={value}/>
         </div>
     );
 }
