@@ -1,21 +1,17 @@
 import React, {useEffect, useState} from "react";
-import Counter from "./components/Counter/Counter";
-import ClassCounter from "./components/Counter/ClassCounter";
+import './styles/App.css'
+import PostList from "./components/PostList/PostList";
 
 function App() {
-    const [value, setValue] = useState('Текстт')
-    useEffect(() => {
-        window.process = {
-            ...window.process,
-        };
-    }, []);
+    const [posts, setPosts] = useState([
+        {id: 1, title: 'Javascript', body: 'Description'},
+        {id: 2, title: 'Javascript', body: 'Description'},
+        {id: 3, title: 'Javascript', body: 'Description'},
+        {id: 4, title: 'Javascript', body: 'Description'}
+    ])
     return (
         <div className="App">
-            <Counter />
-            <ClassCounter/>
-            <h1>{value}</h1>
-            {/*{Двустороннее связывание, управляемый компонент}*/}
-            <input onChange={event => setValue(event.target.value)} type="text" value={value}/>
+            <PostList posts={posts} title={"Список постов"}/>
         </div>
     );
 }
