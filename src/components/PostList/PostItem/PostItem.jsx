@@ -1,7 +1,9 @@
 import React from 'react';
 import style from './PostItem.module.css'
-const PostItem = ({number, ...props}) => {
+import MyButton from "../../UI/Button/MyButton";
+const PostItem = ({number, remove, ...props}) => {
     const {title, body} = props.post
+
     return (
         <div className={style.post}>
             <div className="post__content">
@@ -11,7 +13,7 @@ const PostItem = ({number, ...props}) => {
                 </div>
             </div>
             <div className="post__btn">
-                <button>Удалить</button>
+                <MyButton onClick={() => remove(props.post)}>Удалить</MyButton>
             </div>
         </div>
     );

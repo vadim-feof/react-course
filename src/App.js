@@ -1,8 +1,7 @@
-import React, {useEffect, useRef, useState} from "react";
+import React, {useEffect, useState} from "react";
 import './styles/App.css'
 import PostList from "./components/PostList/PostList";
-import MyButton from "./components/UI/Button/MyButton";
-import MyInput from "./components/UI/Input/MyInput";
+import PostForm from "./components/PostForm/PostForm";
 
 function App() {
     const [posts, setPosts] = useState([
@@ -12,32 +11,21 @@ function App() {
         {id: 4, title: 'Javascript', body: 'Description'}
     ])
 
-    const [newPost, setNewPost] = useState({title: '', body: ''})
-
-    const createPost = (e) => {
-        e.preventDefault()
-
-        setPosts([...posts, {...newPost, id: Date.now()}])
-        setNewPost({title: '', body: ''})
+    const createPost = (newPost) => {
+        setPosts([...posts, newPost])
     }
+    const removePost = (post) => {
+        setPosts(posts.filter( p => p.id !== post.id))
+    }
+
     return (
         <div className="App">
-            <form>
-                <MyInput type="text"
-                         placeholder={"Название поста"}
-                         value={newPost.title}
-                         onChange={event => setNewPost(
-                             {...newPost, title: event.target.value})}
-                />
-                <MyInput type="text"
-                         placeholder={"Описание поста"}
-                         value={newPost.body}
-                         onChange={event => setNewPost(
-                             {...newPost, body: event.target.value})}
-                />
-                <MyButton onClick={(e) => createPost(e)}>Добавить пост</MyButton>
-            </form>
-            <PostList posts={posts} title={"Список постов"}/>
+            <PostForm create={createPost}/>
+            {posts.length
+                ? <PostList remove={removePost}posts={posts} title={"Список постов"}/>
+                : <h1 style={{textAlign: 'center'}}>Посты не найдены</h1>
+            }
+
         </div>
     );
 }
