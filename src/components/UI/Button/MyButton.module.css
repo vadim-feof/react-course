@@ -1,0 +1,17 @@
+.myBtn {
+    color: teal;
+    background: transparent;
+    border: 1px solid #006868;
+    padding: 5px 15px;
+    font-size: 14px;
+    cursor: pointer;
+    border-radius: 6px;
+}
+
+.myBtn:enabled:hover {
+    background: rgba(0, 128, 128, 0.1);
+}
+
+.myBtn:disabled {
+    cursor: not-allowed;
+}
