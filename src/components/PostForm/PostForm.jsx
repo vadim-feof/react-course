@@ -5,6 +5,7 @@ import MyButton from "../UI/Button/MyButton";
 const PostForm = ({create}) => {
 
     const [post, setPost] = useState({title: '', body: ''})
+    const checkBtnDisabled = !(post.title && post.body)
     const addNewPost = (e) => {
         e.preventDefault()
         const newPost = {
@@ -28,7 +29,7 @@ const PostForm = ({create}) => {
                      onChange={event => setPost(
                          {...post, body: event.target.value})}
             />
-            <MyButton onClick={(e) => addNewPost(e)}>Добавить пост</MyButton>
+            <MyButton disabled={checkBtnDisabled} onClick={(e) => addNewPost(e)}>Добавить пост</MyButton>
         </form>
     );
 };

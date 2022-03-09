@@ -1,8 +1,9 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useMemo, useState} from "react";
 import './styles/App.css'
 import PostList from "./components/PostList/PostList";
 import PostForm from "./components/PostForm/PostForm";
 import MySelect from "./components/UI/Select/MySelect";
+import MyInput from "./components/UI/Input/MyInput";
 
 function App() {
     const [posts, setPosts] = useState([
@@ -11,9 +12,6 @@ function App() {
         {id: 3, title: 'cc', body: 'jdh'},
         {id: 4, title: 'll', body: 'tyz'}
     ])
-
-    const [selectedSort, setSelectedSort] = useState('')
-
     const createPost = (newPost) => {
         setPosts([...posts, newPost])
     }
@@ -21,9 +19,25 @@ function App() {
         setPosts(posts.filter( p => p.id !== post.id))
     }
 
+    const [selectedSort, setSelectedSort] = useState('')
+    const [searchQuery, setSearchQuery] = useState('')
+
+    function getSortedPosts() {
+        console.log("getSortedPosts")
+        if (selectedSort)
+            return [...posts].sort( (a, b) => a[selectedSort].localeCompare(b[selectedSort]))
+        return posts
+    }
+    const sortedPosts = useMemo( () => getSortedPosts(),
+        [selectedSort, posts])
+
+    const sortedAndFilteredPosts = useMemo( () => {
+        return sortedPosts.filter( post =>
+            post.title.toLowerCase().includes(searchQuery.toLowerCase()))
+    }, [searchQuery, sortedPosts])
+
     const sortPosts = (sortType) => {
         setSelectedSort(sortType)
-        setPosts([...posts].sort( (a, b) => a[sortType].localeCompare(b[sortType])))
     }
 
 
@@ -32,6 +46,10 @@ function App() {
             <PostForm create={createPost}/>
             <hr style={{margin: '15px 0'}}/>
             <div>
+                <MyInput placeholder="Поиск..."
+                         value={searchQuery}
+                         onChange={e => setSearchQuery(e.target.value)}
+                />
                 <MySelect
                     defaultValue={"Сортировка"}
                     options={[
@@ -42,9 +60,9 @@ function App() {
                     onChange={sortPosts}
                 />
             </div>
-            {posts.length
+            {sortedAndFilteredPosts.length
                 ?
-                <PostList remove={removePost} posts={posts} title={"Список постов"}/>
+                <PostList remove={removePost} posts={sortedAndFilteredPosts} title={"Список постов"}/>
                 :
                 <h1 style={{textAlign: 'center'}}>Посты не найдены</h1>
             }
