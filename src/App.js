@@ -5,6 +5,8 @@ import PostForm from "./components/PostForm/PostForm";
 import MySelect from "./components/UI/Select/MySelect";
 import MyInput from "./components/UI/Input/MyInput";
 import PostFilter from "./components/PostFilter/PostFilter";
+import MyModal from "./components/MyModal/MyModal";
+import MyButton from "./components/UI/Button/MyButton";
 
 function App() {
     const [posts, setPosts] = useState([
@@ -15,6 +17,7 @@ function App() {
     ])
     const createPost = (newPost) => {
         setPosts([...posts, newPost])
+        setModalVisible(false)
     }
     const removePost = (post) => {
         setPosts(posts.filter( p => p.id !== post.id))
@@ -33,19 +36,23 @@ function App() {
             post.title.toLowerCase().includes(filter.searchQuery.toLowerCase()))
     }, [filter.searchQuery, sortedPosts])
 
+    const [modalVisible, setModalVisible] = useState(false)
+
     return (
         <div className="App">
-            <PostForm create={createPost}/>
+            <MyButton style={{marginTop: '30px'}} onClick={() => setModalVisible(true)}>
+                Создать пост
+            </MyButton>
+            <MyModal visible={modalVisible}
+                     setVisible={setModalVisible}
+            >
+                <PostForm create={createPost}/>
+            </MyModal>
             <hr style={{margin: '15px 0'}}/>
             <PostFilter filter={filter}
                         setFilter={setFilter}
             />
-            {sortedAndFilteredPosts.length
-                ?
-                <PostList remove={removePost} posts={sortedAndFilteredPosts} title={"Список постов"}/>
-                :
-                <h1 style={{textAlign: 'center'}}>Посты не найдены</h1>
-            }
+            <PostList remove={removePost} posts={sortedAndFilteredPosts} title={"Список постов"}/>
         </div>
     );
 }

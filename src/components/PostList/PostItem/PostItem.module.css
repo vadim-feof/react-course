@@ -7,3 +7,11 @@
     border-radius: 6px;
     margin-top: 15px;
 }
+
+.content {
+    word-break: break-all;
+}
+
+.btn {
+    margin-left: 10px;
+}
