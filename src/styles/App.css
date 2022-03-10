@@ -30,3 +30,9 @@
     transform: translateX(-400px);
     transition: all 400ms ease-in;
 }
+
+.loader {
+    display: flex;
+    justify-content: center;
+    margin-top: 50px;
+}
