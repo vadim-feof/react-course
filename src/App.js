@@ -6,16 +6,19 @@ import PostFilter from "./components/PostFilter/PostFilter";
 import MyModal from "./components/MyModal/MyModal";
 import MyButton from "./components/UI/Button/MyButton";
 import {usePosts} from "./hooks/usePosts";
-import axios from "axios";
 import PostService from "./API/PostService";
 import Loader from "./components/Loader/Loader";
+import {useFetching} from "./hooks/useFetching";
 
 function App() {
     const [posts, setPosts] = useState([])
-    const [isLoadingPosts, setIsLoadingPosts] = useState(false)
     const [filter, setFilter] = useState({sortBy: '', searchQuery: ''})
     const [modalVisible, setModalVisible] = useState(false)
     const sortedAndFilteredPosts = usePosts(posts, filter.sortBy, filter.searchQuery)
+    const [fetchPosts, isLoadingPosts, postError] = useFetching( async () => {
+        const posts = await PostService.getAll()
+        setPosts(posts);
+    })
 
     const createPost = (newPost) => {
         setPosts([...posts, newPost])
@@ -28,13 +31,6 @@ function App() {
     useEffect( () => {
         fetchPosts()
     }, [])
-
-    async function fetchPosts() {
-        setIsLoadingPosts(true)
-        const posts = await PostService.getAll()
-        setPosts(posts)
-        setIsLoadingPosts(false)
-    }
 
     return (
         <div className="App">
