@@ -13,3 +13,20 @@
 .App {
     width: 800px;
 }
+
+.post-enter {
+    opacity: 0;
+}
+.post-enter-active {
+    opacity: 1;
+    transition: opacity 400ms ease-in;
+}
+.post-exit {
+    opacity: 1;
+    transform: translateX(0px);
+}
+.post-exit-active {
+    opacity: 0;
+    transform: translateX(-400px);
+    transition: all 400ms ease-in;
+}
