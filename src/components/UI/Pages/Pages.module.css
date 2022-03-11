@@ -1,0 +1,23 @@
+.wrapper {
+    margin-top: 15px;
+    display: flex;
+}
+
+.page {
+    color: black;
+    padding: 8px 16px;
+    text-decoration: none;
+    cursor: pointer;
+    user-select: none;
+}
+
+.active {
+    background-color: teal;
+    color: white;
+    border-radius: 5px;
+}
+
+.page:hover:not(.active) {
+    background-color: #ddd;
+    border-radius: 5px;
+}

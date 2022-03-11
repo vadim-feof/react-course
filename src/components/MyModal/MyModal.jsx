@@ -12,7 +12,7 @@ const MyModal = ({visible, setVisible, children}) => {
              onClick={() => setVisible(false)}
         >
             <div className={styles.content}
-                 onClick={event => event.stopPropagation()}
+                 onClickCapture={event => event.stopPropagation()}
             >
                 {children}
             </div>
