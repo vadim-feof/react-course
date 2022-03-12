@@ -1,7 +1,9 @@
 import React from 'react';
-import styles from './Pages.module.css'
+import styles from './Pagination.module.css'
+import {usePagination} from "../../../hooks/usePagination";
 
-const Pages = ({pages, currentPage, setCurrentPage}) => {
+const Pagination = ({totalPages, currentPage, setCurrentPage}) => {
+    const pages = usePagination(totalPages)
     const nextPage = () => {
         if (currentPage !== pages.length)
             setCurrentPage(currentPage + 1)
@@ -29,4 +31,4 @@ const Pages = ({pages, currentPage, setCurrentPage}) => {
     );
 };
 
-export default Pages;
+export default Pagination;

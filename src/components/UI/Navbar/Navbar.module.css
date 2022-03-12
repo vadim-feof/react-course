@@ -1,0 +1,21 @@
+.navbar {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 25px;
+    height: 80px;
+    width: 100vw;
+    padding: 10px 50px;
+    background: #c2e7e7
+}
+
+.item a{
+    text-decoration: none;
+    font-weight: bold;
+    color: black;
+    font-size: 20px;
+}
+
+.item a:hover {
+    color: #4d4d4d;
+}
