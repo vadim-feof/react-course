@@ -14,4 +14,14 @@ export default class PostService {
         })
         return response
     }
+
+    static async getById(id) {
+        const response = await instance.get(`posts/${id}`)
+        return response
+    }
+
+    static async getCommentsByPostId(id) {
+        const response = await instance.get(`posts/${id}/comments`)
+        return response
+    }
 }

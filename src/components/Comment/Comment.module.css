@@ -1,0 +1,14 @@
+.comment {
+    border: 1px solid teal;
+    margin: 10px 0;
+    padding: 10px;
+    border-radius: 4px;
+}
+
+div {
+    margin: 5px 0;
+}
+
+span {
+    font-weight: bold;
+}
