@@ -16,6 +16,12 @@
     font-size: 20px;
 }
 
+button a {
+    text-decoration: none;
+    font-weight: bold;
+    color: black;
+}
+
 .item a:hover {
     color: #4d4d4d;
 }
