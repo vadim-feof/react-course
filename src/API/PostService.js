@@ -2,7 +2,7 @@ import axios from "axios";
 // http://localhost:5000/api/
 // https://damp-spire-86619.herokuapp.com/api
 const instance = axios.create({
-    baseURL: 'http://localhost:5000/api/',
+    baseURL: 'https://damp-spire-86619.herokuapp.com/api',
 })
 
 export default class PostService {
