@@ -19,27 +19,27 @@ const Posts = () => {
     const sortedAndFilteredPosts = usePosts(posts, filter.sortBy, filter.searchQuery)
     const [currentPage, setCurrentPage] = useState(1)
     const [totalPages, setTotalPages] = useState(0)
-    const [limit, setLimit] = useState(10)
+    const [limit, setLimit] = useState(5)
 
     const [fetchPosts, isLoadingPosts, postError] = useFetching( async (limit, currentPage) => {
         const response = await PostService.getAll(limit, currentPage)
-        setPosts([...posts, ...response.data]);
+        setPosts([...response.data]);
         const totalCount = response.headers['x-total-count']
         setTotalPages(getPagesCount(totalCount, limit))
     })
 
-    const lastElement = useRef()
-    useObserver(lastElement, currentPage < totalPages, isLoadingPosts, () => {
-        console.log(currentPage)
-        setCurrentPage(currentPage + 1)
-    })
-
-    const createPost = (newPost) => {
-        setPosts([...posts, newPost])
+    const createPost = async (newPost) => {
+        const response = await PostService.createPost(newPost)
+        if (posts.length === limit)
+            setCurrentPage(currentPage + 1)
+        else
+            setPosts([...posts, response.data])
         setModalVisible(false)
     }
-    const removePost = (post) => {
-        setPosts(posts.filter( p => p.id !== post.id))
+    const removePost = async (post) => {
+        const response = await PostService.deletePost(post._id)
+        const deletedPost = response.data
+        setPosts(posts.filter( p => p._id !== deletedPost._id))
     }
 
     useEffect( () => {
@@ -61,18 +61,19 @@ const Posts = () => {
                         setFilter={setFilter}
             />
             {postError && <h1>{postError}</h1>}
-            {/*<Pagination totalPages={totalPages}
+            {<Pagination totalPages={totalPages}
                         currentPage={currentPage}
-                        setCurrentPage={setCurrentPage}/>*/}
-            <PostList
-                remove={removePost}
-                posts={sortedAndFilteredPosts}
-                title={"Список постов"}
-                isLoading={isLoadingPosts}
-                defaultPosts={posts}
-            />
-            {isLoadingPosts && <div className="loader"><Loader/></div>}
-            <div ref={lastElement} style={{height: 20}}/>
+                        setCurrentPage={setCurrentPage}/>}
+
+            {isLoadingPosts
+                ? <div className="loader"><Loader/></div>
+                : <PostList
+                    remove={removePost}
+                    posts={sortedAndFilteredPosts}
+                    title={"Список постов"}
+                    isLoading={isLoadingPosts}
+                />
+            }
         </div>
     );
 };

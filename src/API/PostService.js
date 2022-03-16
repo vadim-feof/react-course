@@ -1,7 +1,8 @@
 import axios from "axios";
-
+// http://localhost:5000/api/
+// https://damp-spire-86619.herokuapp.com/api
 const instance = axios.create({
-    baseURL: 'https://jsonplaceholder.typicode.com/',
+    baseURL: 'http://localhost:5000/api/',
 })
 
 export default class PostService {
@@ -22,6 +23,18 @@ export default class PostService {
 
     static async getCommentsByPostId(id) {
         const response = await instance.get(`posts/${id}/comments`)
+        return response
+    }
+
+    static async createPost(post) {
+        const response = await instance.post(`posts`, {
+            ...post
+        })
+        return response
+    }
+
+    static async deletePost(id) {
+        const response = await instance.delete(`posts/${id}`)
         return response
     }
 }
