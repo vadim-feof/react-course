@@ -1,8 +1,11 @@
 import axios from "axios";
-// http://localhost:5000/api/
-// https://damp-spire-86619.herokuapp.com/api
+import {config} from "../config.js";
+
 const instance = axios.create({
-    baseURL: 'https://damp-spire-86619.herokuapp.com/api',
+    baseURL: config.baseURL,
+    headers: {
+        'Authorization': `Bearer ${localStorage.getItem('token')}`
+    }
 })
 
 export default class PostService {

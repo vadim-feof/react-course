@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo, useRef, useState} from 'react';
+import React, {useContext, useEffect, useMemo, useRef, useState} from 'react';
 import {usePosts} from "../hooks/usePosts";
 import {useFetching} from "../hooks/useFetching";
 import PostService from "../API/PostService";
@@ -11,8 +11,10 @@ import Pagination from "../components/UI/Pagination/Pagination";
 import Loader from "../components/UI/Loader/Loader";
 import PostList from "../components/PostList/PostList";
 import {useObserver} from "../hooks/useObserver";
+import {AuthContext} from "../context/context";
 
 const Posts = () => {
+    const {isAuth} = useContext(AuthContext)
     const [posts, setPosts] = useState([])
     const [filter, setFilter] = useState({sortBy: '', searchQuery: ''})
     const [modalVisible, setModalVisible] = useState(false)
@@ -27,7 +29,6 @@ const Posts = () => {
         const totalCount = response.headers['x-total-count']
         setTotalPages(getPagesCount(totalCount, limit))
     })
-
     const createPost = async (newPost) => {
         const response = await PostService.createPost(newPost)
         if (posts.length === limit)
@@ -43,7 +44,8 @@ const Posts = () => {
     }
 
     useEffect( () => {
-        fetchPosts(limit, currentPage)
+        if (isAuth)
+            fetchPosts(limit, currentPage)
     }, [currentPage])
 
     return (

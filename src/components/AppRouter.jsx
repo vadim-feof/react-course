@@ -5,13 +5,14 @@ import {AuthContext} from "../context/context";
 import Loader from "./UI/Loader/Loader";
 
 const AppRouter = () => {
-    const {isAuth, authIsLoading} = useContext(AuthContext)
-    if (authIsLoading)
+    const {isAuth, authLoading} = useContext(AuthContext)
+
+    if (authLoading)
         return <Loader/>
 
     return (
         <Routes>
-        {isAuth
+        {isAuth || localStorage.getItem('token')
             ?
             privateRoutes.map(route =>
                 <Route key={route.path}

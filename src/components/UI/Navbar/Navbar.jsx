@@ -8,8 +8,9 @@ const Navbar = () => {
     const {isAuth, setIsAuth} = useContext(AuthContext)
 
     const logout = () => {
+        localStorage.removeItem('token')
+        localStorage.removeItem('username')
         setIsAuth(false)
-        localStorage.removeItem('auth')
     }
 
     return (
@@ -20,20 +21,27 @@ const Navbar = () => {
             <div className={styles.item}>
                 <NavLink to="/about">О приложении</NavLink>
             </div>
-            {isAuth
-                ?
-                <div>
-                    <MyButton onClick={logout}>
-                        Выход
-                    </MyButton>
-                </div>
-                :
-                <div>
-                    <MyButton>
-                        <NavLink to="/login">Войти</NavLink>
-                    </MyButton>
-                </div>
-            }
+            <div>
+                {isAuth || localStorage.getItem('token')
+                    ?
+                        <MyButton onClick={logout}>
+                            Выход
+                        </MyButton>
+                    :
+                        <div>
+                            <NavLink to="/login">
+                                <MyButton style={{marginRight: 5}}>
+                                    Войти
+                                </MyButton>
+                            </NavLink>
+                            <NavLink to="/registration">
+                                <MyButton>
+                                    Регистрация
+                                </MyButton>
+                            </NavLink>
+                        </div>
+                }
+            </div>
         </div>
     );
 };
