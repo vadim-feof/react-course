@@ -16,8 +16,8 @@ const Login = () => {
     const fromPage = location.state?.from?.pathname || '/posts'
 
     const [loginData, setLoginData] = useState({
-        username: 'user',
-        password: 'user',
+        username: '',
+        password: '',
         error: ''
     })
 

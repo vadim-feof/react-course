@@ -9,8 +9,8 @@ import {useNavigate} from "react-router-dom";
 const Registration = () => {
     const navigate = useNavigate()
     const [regData, setRegData] = useState({
-        username: 'user',
-        password: 'user',
+        username: '',
+        password: '',
         message: ''
     })
     const [fetchReg, isLoadingReg, regError] = useFetching(async (username, password) => {

@@ -20,24 +20,40 @@ export default class PostService {
     }
 
     static async getById(id) {
-        const response = await instance.get(`posts/${id}`)
+        const response = await instance.get(`posts/${id}`, {
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
+            }
+        })
         return response
     }
 
     static async getCommentsByPostId(id) {
-        const response = await instance.get(`posts/${id}/comments`)
+        const response = await instance.get(`posts/${id}/comments`, {
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
+            }
+        })
         return response
     }
 
     static async createPost(post) {
         const response = await instance.post(`posts`, {
             ...post
+        }, {
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
+            }
         })
         return response
     }
 
     static async deletePost(id) {
-        const response = await instance.delete(`posts/${id}`)
+        const response = await instance.delete(`posts/${id}`, {
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
+            }
+        })
         return response
     }
 }

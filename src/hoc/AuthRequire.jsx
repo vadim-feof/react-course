@@ -8,8 +8,11 @@ const AuthRequire = ({children}) => {
     const location = useLocation()
     const navigate = useNavigate()
 
-    if (!isAuth) {
+    if (!isAuth && localStorage.getItem('token')) {
         auth(() => navigate(location))
+        return <Loader/>
+    }
+    else if (!localStorage.getItem('token')) {
         return <Navigate to={'/login'} state={{from: location}}/>
     }
 

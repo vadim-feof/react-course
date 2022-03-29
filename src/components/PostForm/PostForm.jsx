@@ -4,7 +4,11 @@ import MyButton from "../UI/Button/MyButton";
 
 const PostForm = ({create}) => {
 
-    const [post, setPost] = useState({author: '', title: '', body: ''})
+    const [post, setPost] = useState({
+        author: localStorage.getItem('username'),
+        title: '',
+        body: ''
+    })
     const checkBtnDisabled = !(post.author && post.body && post.title)
     const addNewPost = (e) => {
         e.preventDefault()
@@ -12,7 +16,11 @@ const PostForm = ({create}) => {
             ...post
         }
         create(newPost)
-        setPost({author: '', title: '', body: ''})
+        setPost({
+            author: localStorage.getItem('username'),
+            title: '',
+            body: ''
+        })
     }
 
     return (
@@ -35,7 +43,11 @@ const PostForm = ({create}) => {
                      onChange={event => setPost(
                          {...post, body: event.target.value})}
             />
-            <MyButton disabled={checkBtnDisabled} onClick={(e) => addNewPost(e)}>Добавить пост</MyButton>
+            <MyButton disabled={checkBtnDisabled}
+                      onClick={(e) => addNewPost(e)}
+            >
+                Добавить пост
+            </MyButton>
         </form>
     );
 };
