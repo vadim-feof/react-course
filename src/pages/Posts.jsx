@@ -12,9 +12,9 @@ import Loader from "../components/UI/Loader/Loader";
 import PostList from "../components/PostList/PostList";
 import {useObserver} from "../hooks/useObserver";
 import {AuthContext} from "../context/context";
+import AuthService from "../API/AuthService";
 
 const Posts = () => {
-    const {isAuth} = useContext(AuthContext)
     const [posts, setPosts] = useState([])
     const [filter, setFilter] = useState({sortBy: '', searchQuery: ''})
     const [modalVisible, setModalVisible] = useState(false)
@@ -29,6 +29,7 @@ const Posts = () => {
         const totalCount = response.headers['x-total-count']
         setTotalPages(getPagesCount(totalCount, limit))
     })
+
     const createPost = async (newPost) => {
         const response = await PostService.createPost(newPost)
         if (posts.length === limit)
@@ -43,11 +44,9 @@ const Posts = () => {
         setPosts(posts.filter( p => p._id !== deletedPost._id))
     }
 
-    useEffect( () => {
-        if (isAuth)
-            fetchPosts(limit, currentPage)
+    useEffect( async () => {
+        fetchPosts(limit, currentPage)
     }, [currentPage])
-
     return (
         <div className="App">
             <MyButton style={{marginTop: '30px'}} onClick={() => setModalVisible(true)}>

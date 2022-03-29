@@ -10,10 +10,7 @@ import Registration from "../pages/Registration";
 export const privateRoutes = [
     {path: "/posts", element: <Posts/>},
     {path: "/posts/:postId", element: <PostIdPage/>},
-    {path: "/about", element: <About/>},
-    {path: "/error", element: <Error/>},
-    {path: "*", element: <Navigate to="/error"/>},
-    {path: "/login", element: <Navigate to="/posts"/>}
+    {path: "/*", element: <Navigate to="/posts"/>}
 ]
 
 export const publicRoutes = [

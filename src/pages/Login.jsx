@@ -5,26 +5,36 @@ import {AuthContext} from "../context/context";
 import {useFetching} from "../hooks/useFetching";
 import AuthService from "../API/AuthService";
 import Loader from "../components/UI/Loader/Loader";
+import {useLocation, useNavigate} from "react-router-dom";
+import {useAuth} from "../hooks/useAuth";
 
 const Login = () => {
-    const {setIsAuth} = useContext(AuthContext)
+    const location = useLocation()
+    const navigate = useNavigate()
+    const {auth, signIn} = useAuth()
+
+    const fromPage = location.state?.from?.pathname || '/posts'
+
     const [loginData, setLoginData] = useState({
         username: 'user',
-        password: 'user'
-    })
-    const [fetchLogin, isLoadingLogin, loginError] = useFetching(async (username, password) => {
-        const data = await AuthService.login(username, password)
-        localStorage.setItem('token', data.token)
-        localStorage.setItem('username', data.username)
-        setIsAuth(true)
+        password: 'user',
+        error: ''
     })
 
     const login = async event => {
         event.preventDefault()
-        fetchLogin(loginData.username, loginData.password)
+        const error = await signIn(loginData, () => navigate(fromPage, {replace: true}))
+
+        if (error) {
+            setLoginData({
+                ...loginData,
+                error
+            })
+        }
     }
 
-    useEffect( () => () => {})
+    if (localStorage.getItem('token'))
+        auth(() => navigate(fromPage))
 
     return (
         <div>
@@ -41,12 +51,7 @@ const Login = () => {
                     onChange={e => setLoginData({...loginData, password: e.target.value})}
                 />
                 <MyButton>Войти</MyButton>
-                {isLoadingLogin
-                    ? <Loader/>
-                    : loginError
-                        ? <div>{loginError.message}</div>
-                        : null
-                }
+                {loginData.error && <div>{loginData.error}</div>}
             </form>
         </div>
     );

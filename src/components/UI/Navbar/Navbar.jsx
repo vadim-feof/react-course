@@ -1,16 +1,15 @@
-import React, {useContext} from 'react';
+import React from 'react';
 import {NavLink, useNavigate} from "react-router-dom";
 import styles from './Navbar.module.css'
 import MyButton from "../Button/MyButton";
-import {AuthContext} from "../../../context/context";
+import {useAuth} from "../../../hooks/useAuth";
 
 const Navbar = () => {
-    const {isAuth, setIsAuth} = useContext(AuthContext)
+    const {isAuth, signOut} = useAuth()
+    const navigate = useNavigate()
 
     const logout = () => {
-        localStorage.removeItem('token')
-        localStorage.removeItem('username')
-        setIsAuth(false)
+        signOut(() => navigate('/login'))
     }
 
     return (

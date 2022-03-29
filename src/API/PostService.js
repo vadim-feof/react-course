@@ -2,10 +2,7 @@ import axios from "axios";
 import {config} from "../config.js";
 
 const instance = axios.create({
-    baseURL: config.baseURL,
-    headers: {
-        'Authorization': `Bearer ${localStorage.getItem('token')}`
-    }
+    baseURL: config.baseURL
 })
 
 export default class PostService {
@@ -14,6 +11,9 @@ export default class PostService {
             params: {
                 _limit: limit,
                 _page: page
+            },
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
             }
         })
         return response
