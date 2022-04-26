@@ -5,7 +5,7 @@ import PostService from "../API/PostService";
 import {getPagesCount} from "../utils/pages";
 import MyButton from "../components/UI/Button/MyButton";
 import MyModal from "../components/UI/MyModal/MyModal";
-import PostForm from "../components/PostForm/PostForm";
+import CreatePostForm from "../components/CreatePostForm/CreatePostForm";
 import PostFilter from "../components/PostFilter/PostFilter";
 import Pagination from "../components/UI/Pagination/Pagination";
 import Loader from "../components/UI/Loader/Loader";
@@ -13,15 +13,18 @@ import PostList from "../components/PostList/PostList";
 import {useObserver} from "../hooks/useObserver";
 import {AuthContext} from "../context/context";
 import AuthService from "../API/AuthService";
+import UpdatePostForm from "../components/UpdatePostForm/UpdatePostForm";
 
 const Posts = () => {
     const [posts, setPosts] = useState([])
     const [filter, setFilter] = useState({sortBy: '', searchQuery: ''})
-    const [modalVisible, setModalVisible] = useState(false)
+    const [createPostModal, setCreatePostModal] = useState(false)
+    const [updatePostVisible, setUpdatePostVisible] = useState(false)
     const sortedAndFilteredPosts = usePosts(posts, filter.sortBy, filter.searchQuery)
     const [currentPage, setCurrentPage] = useState(1)
     const [totalPages, setTotalPages] = useState(0)
     const [limit, setLimit] = useState(5)
+    const [selectedPost, setSelectedPost] = useState(null)
 
     const [fetchPosts, isLoadingPosts, postError] = useFetching( async (limit, currentPage) => {
         const response = await PostService.getAll(limit, currentPage)
@@ -36,26 +39,47 @@ const Posts = () => {
             setCurrentPage(currentPage + 1)
         else
             setPosts([...posts, response.data])
-        setModalVisible(false)
+        setCreatePostModal(false)
     }
+
     const removePost = async (post) => {
         const response = await PostService.deletePost(post._id)
         const deletedPost = response.data
         setPosts(posts.filter( p => p._id !== deletedPost._id))
     }
 
+    const updatePost = async (post) => {
+        const response = await PostService.updatePost(post)
+        const updatedPost = response.data
+        setPosts(posts => {
+            const newPosts = posts.map(post => {
+                if (post._id === updatedPost._id)
+                    return updatedPost
+                return post
+            })
+            return newPosts
+        })
+        setUpdatePostVisible(false)
+    }
+
     useEffect( async () => {
         fetchPosts(limit, currentPage)
     }, [currentPage])
+
     return (
         <div className="App">
-            <MyButton style={{marginTop: '30px'}} onClick={() => setModalVisible(true)}>
+            <MyButton style={{marginTop: '30px'}} onClick={() => setCreatePostModal(true)}>
                 Создать пост
             </MyButton>
-            <MyModal visible={modalVisible}
-                     setVisible={setModalVisible}
+            <MyModal visible={createPostModal}
+                     setVisible={setCreatePostModal}
             >
-                <PostForm create={createPost}/>
+                <CreatePostForm create={createPost}/>
+            </MyModal>
+            <MyModal visible={updatePostVisible}
+                     setVisible={setUpdatePostVisible}
+            >
+                <UpdatePostForm update={updatePost} selectedPost={selectedPost}/>
             </MyModal>
             <hr style={{margin: '15px 0'}}/>
             <PostFilter filter={filter}
@@ -69,6 +93,10 @@ const Posts = () => {
             {isLoadingPosts
                 ? <div className="loader"><Loader/></div>
                 : <PostList
+                    update={(post) => {
+                        setSelectedPost(post)
+                        setUpdatePostVisible(true)
+                    }}
                     remove={removePost}
                     posts={sortedAndFilteredPosts}
                     title={"Список постов"}

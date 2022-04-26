@@ -56,4 +56,15 @@ export default class PostService {
         })
         return response
     }
+
+    static async updatePost(post) {
+        const response = await instance.put(`posts`, {
+            ...post
+        }, {
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
+            }
+        })
+        return response
+    }
 }

@@ -9,7 +9,7 @@ export const useFetching = (callback) => {
             setIsLoading(true)
             await callback(...args)
         } catch (e) {
-            setError(e.response.data);
+            setError(e.response.data.message);
         } finally {
             setIsLoading(false)
         }

@@ -1,15 +1,17 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import MyInput from "../UI/Input/MyInput";
 import MyButton from "../UI/Button/MyButton";
 
-const PostForm = ({create}) => {
+const CreatePostForm = ({create}) => {
 
     const [post, setPost] = useState({
         author: localStorage.getItem('username'),
         title: '',
         body: ''
     })
+
     const checkBtnDisabled = !(post.author && post.body && post.title)
+
     const addNewPost = (e) => {
         e.preventDefault()
         const newPost = {
@@ -52,4 +54,4 @@ const PostForm = ({create}) => {
     );
 };
 
-export default PostForm;
+export default CreatePostForm;

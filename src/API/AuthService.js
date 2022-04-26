@@ -7,18 +7,12 @@ const instance = axios.create({
 
 export default class AuthService {
     static async login(username, password) {
-        try {
-            const response = await instance.post('login', {
-                username, password
-            })
-            localStorage.setItem('token', response.data.token)
-            localStorage.setItem('username', response.data.username)
-            return response.data
-        } catch (e) {
-            return {
-                error: e.response.data.message
-            }
-        }
+        const response = await instance.post('login', {
+            username, password
+        })
+        localStorage.setItem('token', response.data.token)
+        localStorage.setItem('username', response.data.username)
+        return response.data
     }
 
     static async registration(username, password) {
@@ -29,22 +23,13 @@ export default class AuthService {
     }
 
     static async auth() {
-        try {
-            const response = await instance.get('auth',{
-                headers: {
-                    Authorization: `Bearer ${localStorage.getItem('token')}`
-                }
-            })
-            localStorage.setItem('token',response.data.token)
-            localStorage.setItem('username',response.data.username)
-            return response.data
-        } catch(e)  {
-            localStorage.removeItem('token')
-            localStorage.removeItem('username')
-            return {
-                error: e.response.data.message
+        const response = await instance.get('auth',{
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('token')}`
             }
-        }
-
+        })
+        localStorage.setItem('token',response.data.token)
+        localStorage.setItem('username',response.data.username)
+        return response.data
     }
 }

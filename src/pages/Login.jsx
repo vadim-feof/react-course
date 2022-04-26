@@ -1,9 +1,6 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import MyInput from "../components/UI/Input/MyInput";
 import MyButton from "../components/UI/Button/MyButton";
-import {AuthContext} from "../context/context";
-import {useFetching} from "../hooks/useFetching";
-import AuthService from "../API/AuthService";
 import Loader from "../components/UI/Loader/Loader";
 import {useLocation, useNavigate} from "react-router-dom";
 import {useAuth} from "../hooks/useAuth";
@@ -11,31 +8,29 @@ import {useAuth} from "../hooks/useAuth";
 const Login = () => {
     const location = useLocation()
     const navigate = useNavigate()
-    const {auth, signIn} = useAuth()
+    const {signIn, isLoading, error} = useAuth()
 
     const fromPage = location.state?.from?.pathname || '/posts'
 
     const [loginData, setLoginData] = useState({
         username: '',
         password: '',
-        error: ''
     })
 
     const login = async event => {
         event.preventDefault()
-        const error = await signIn(loginData, () => navigate(fromPage, {replace: true}))
-
-        if (error) {
-            setLoginData({
-                ...loginData,
-                error
-            })
-        }
+        signIn(loginData.username, loginData.password, () => {
+            navigate(fromPage, {replace: true})
+        })
     }
 
-    if (localStorage.getItem('token'))
-        auth(() => navigate(fromPage))
+    useEffect(() => {
+        if (localStorage.getItem('token')) {
+            navigate(fromPage)
+        }
+    }, [])
 
+    const checkBtnDisabled = !(loginData.username && loginData.password)
     return (
         <div>
             <form onSubmit={login}>
@@ -50,8 +45,11 @@ const Login = () => {
                     placeholder="Пароль"
                     onChange={e => setLoginData({...loginData, password: e.target.value})}
                 />
-                <MyButton>Войти</MyButton>
-                {loginData.error && <div>{loginData.error}</div>}
+                <MyButton disabled={checkBtnDisabled || isLoading}>Войти</MyButton>
+                {error && <div className='error'>{error}</div>}
+                <div>
+                    {isLoading && <Loader/>}
+                </div>
             </form>
         </div>
     );

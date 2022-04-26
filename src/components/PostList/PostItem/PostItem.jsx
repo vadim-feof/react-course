@@ -2,7 +2,7 @@ import React from 'react';
 import styles from './PostItem.module.css'
 import MyButton from "../../UI/Button/MyButton";
 import {useNavigate} from "react-router-dom";
-const PostItem = ({number, remove, ...props}) => {
+const PostItem = ({number, remove, update, ...props}) => {
     const {author, title, body, _id} = props.post
     const navigate = useNavigate()
     return (
@@ -20,6 +20,9 @@ const PostItem = ({number, remove, ...props}) => {
                 </div>
                 <div className={styles.btn}>
                     <MyButton onClick={() => remove(props.post)}>Удалить</MyButton>
+                </div>
+                <div className={styles.btn}>
+                    <MyButton onClick={() => update(props.post)}>Изменить</MyButton>
                 </div>
             </div>
         </div>

@@ -1,19 +1,27 @@
 import {AuthContext} from "../context/context";
 import {useState} from "react";
 import AuthService from "../API/AuthService";
-import {Navigate, useNavigate} from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 
 export const AuthProvider = ({children}) => {
     const [isAuth, setIsAuth] = useState(false)
+    const [isLoading, setIsLoading] = useState(false)
+    const [error, setError] = useState('')
+
     const navigate = useNavigate()
-    const signIn = async (loginData, cb) => {
-        const user = await AuthService.login(loginData.username, loginData.password)
-        if (!user.error) {
+
+    const signIn = async (username, password, cb) => {
+        try {
+            setIsLoading(true)
+            setError('')
+            await AuthService.login(username, password)
             setIsAuth(true)
             cb()
-        }
-        else {
-            return user.error
+        } catch (e) {
+            setError(e.response.data.message)
+            setIsAuth(false)
+        } finally {
+            setIsLoading(false)
         }
     }
 
@@ -24,19 +32,24 @@ export const AuthProvider = ({children}) => {
         cb()
     }
 
-    const auth = async (cb) => {
-        const user = await AuthService.auth()
-        if (!user.error) {
+    const auth = async (location, cb) => {
+        try {
+            setIsLoading(true)
+            setError('')
+            await AuthService.auth()
             setIsAuth(true)
             cb()
-        }
-        else {
-            navigate('/login')
-            return user.error
+        } catch (e) {
+            setError(e.response.data.message)
+            setIsAuth(false)
+            localStorage.removeItem('token')
+            navigate('/login', {state: {from: location}})
+        } finally {
+            setIsLoading(false)
         }
     }
 
-    const value = {isAuth, signIn, signOut, auth}
+    const value = {isAuth, isLoading, error, signIn, signOut, auth}
 
     return (
         <AuthContext.Provider value={value}>
